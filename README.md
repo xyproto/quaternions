@@ -1,5 +1,8 @@
 # quaternions
 
+Backstory
+---------
+
 Go does not support operator overloading. This is especially painful when dealing with quaternions.
 
 This project is an example for how to embed Lua and call Go code from Lua, in order to get to use operator overloading in Lua.
