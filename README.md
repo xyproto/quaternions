@@ -1,4 +1,6 @@
-# quaternions
+# Quaternions
+
+One way to bring operator overloading to Go, by embedding Lua
 
 Backstory
 ---
