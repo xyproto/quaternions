@@ -1,7 +1,7 @@
 # quaternions
 
 Backstory
----------
+---
 
 Go does not support operator overloading. This is especially painful when dealing with quaternions.
 
@@ -11,7 +11,7 @@ The downside of embedding any scripting language is a loss of speed, but the ups
 
 Uses [unum](https://github.com/go-utils/unum) and [gopher-lua](https://github.com/yuin/gopher-lua).
 
-Various information
--------------------
+Various
+---
 * License: MIT
 * Author: Alexander F Rødseth <xyproto@archlinux.org>
