@@ -1,9 +1,8 @@
 # Quaternions
 
-One way to bring operator overloading to Go, by embedding Lua
+One way to bring operator overloading to Go, by embedding Lua.
 
-Backstory
----
+## Background
 
 Go does not support operator overloading. This is especially painful when dealing with quaternions.
 
@@ -11,9 +10,7 @@ This project is an example for how to embed Lua and call Go code from Lua, in or
 
 The downside of embedding any scripting language is a loss of speed, but the upside is that it's possible to use Go code and also use quaternions together with operator overloading.
 
-Uses [unum](https://github.com/go-utils/unum) and [gopher-lua](https://github.com/yuin/gopher-lua).
+## General info
 
-Various
----
 * License: MIT
-* Author: Alexander F Rødseth <xyproto@archlinux.org>
+* Author: Alexander F. Rødseth <xyproto@archlinux.org>
