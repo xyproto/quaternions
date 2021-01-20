@@ -4,7 +4,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/go-utils/unum"
+	"github.com/westphae/quaternion"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -23,8 +23,6 @@ var quatMethods = map[string]lua.LGFunction{
 	"__tostring": quatString,
 	"__mul":      quatMul,
 	"__add":      quatAdd,
-	"rad":        quatAngleRad,
-	"deg":        quatAngleDeg,
 }
 
 // Method for multiplying quaternions in Lua
@@ -32,8 +30,8 @@ func quatMul(L *lua.LState) int {
 	self := checkQuat(L, 1)  // arg 1 (the object)
 	other := checkQuat(L, 2) // arg 2 (first method argument)
 	// Multiply self with other and return the result
-	result := self.Mul(other)
-	userdata, err := constructQuat(L, result)
+	result := quaternion.Prod(*self, *other)
+	userdata, err := constructQuat(L, &result)
 	if err != nil {
 		fmt.Println("ERROR", err)
 		L.Push(lua.LString(err.Error()))
@@ -48,8 +46,8 @@ func quatAdd(L *lua.LState) int {
 	self := checkQuat(L, 1)  // arg 1 (the object)
 	other := checkQuat(L, 2) // arg 2 (first method argument)
 	// Add self with other and return the result
-	result := unum.NewQuat(self.X+other.X, self.Y+other.Y, self.Z+other.Z, self.W+other.W)
-	userdata, err := constructQuat(L, result)
+	result := quaternion.Quaternion{self.X + other.X, self.Y + other.Y, self.Z + other.Z, self.W + other.W}
+	userdata, err := constructQuat(L, &result)
 	if err != nil {
 		fmt.Println(err)
 		L.Push(lua.LString(err.Error()))
@@ -59,28 +57,8 @@ func quatAdd(L *lua.LState) int {
 	return 1 // Number of returned values
 }
 
-// Method for getting the angle between two quaternions in Lua, in radians
-func quatAngleRad(L *lua.LState) int {
-	self := checkQuat(L, 1)  // arg 1 (the object)
-	other := checkQuat(L, 2) // arg 2 (first method argument)
-	// Get the angle in float64
-	result := self.AngleRad(other)
-	L.Push(lua.LNumber(result))
-	return 1 // Number of returned values
-}
-
-// Method for getting the angle between two quaternions in Lua, in degrees
-func quatAngleDeg(L *lua.LState) int {
-	self := checkQuat(L, 1)  // arg 1 (the object)
-	other := checkQuat(L, 2) // arg 2 (first method argument)
-	// Get the angle in float64
-	result := self.AngleDeg(other)
-	L.Push(lua.LNumber(result))
-	return 1 // Number of returned values
-}
-
 // For converting from a *unum.Quat to a userdata Quat in Lua
-func constructQuat(L *lua.LState, q *unum.Quat) (*lua.LUserData, error) {
+func constructQuat(L *lua.LState, q *quaternion.Quaternion) (*lua.LUserData, error) {
 	ud := L.NewUserData()
 	ud.Value = q
 	L.SetMetatable(ud, L.GetTypeMetatable(lQuatClass))
@@ -88,9 +66,9 @@ func constructQuat(L *lua.LState, q *unum.Quat) (*lua.LUserData, error) {
 }
 
 // Check that the given argument number is a userdata Quat, and return it
-func checkQuat(L *lua.LState, argnr int) *unum.Quat {
+func checkQuat(L *lua.LState, argnr int) *quaternion.Quaternion {
 	ud := L.CheckUserData(argnr)
-	if quat, ok := ud.Value.(*unum.Quat); ok {
+	if quat, ok := ud.Value.(*quaternion.Quaternion); ok {
 		return quat
 	}
 	L.ArgError(argnr, "Quat expected")
@@ -126,7 +104,7 @@ func main() {
 		w := float64(L.ToNumber(4)) // argument 4
 
 		// Construct a new Quat
-		userdata, err := constructQuat(L, unum.NewQuat(x, y, z, w))
+		userdata, err := constructQuat(L, &quaternion.Quaternion{x, y, z, w})
 		if err != nil {
 			fmt.Println("ERROR", err)
 			L.Push(lua.LString(err.Error()))
