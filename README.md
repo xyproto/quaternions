@@ -13,4 +13,4 @@ The downside of embedding any scripting language is a loss of speed, but the ups
 ## General info
 
 * License: MIT
-* Author: Alexander F. Rødseth <xyproto@archlinux.org>
+* Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
